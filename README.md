@@ -16,4 +16,4 @@ It uses python 3 and has dependencies to be easily resolved by the user. one of 
 ## Now, sit back and relax and watch the videos download on their own.
 # Avoid using the system  when the script is running.
 
-### If some decent number of people star this repository and support the whole idea, I will uploading a video on my [YOUTUBE CHANNEL](https://www.youtube.com/channel/UCU8Kpue_IKfiIJeLSzUo5UQ), explaining usage details and how to get fix the commonly occuring errors.
+### If some decent number of people star this repository and support the whole idea, I will upload a video on my [YOUTUBE CHANNEL](https://www.youtube.com/channel/UCU8Kpue_IKfiIJeLSzUo5UQ), explaining usage details and how to get fix the commonly occuring errors.
