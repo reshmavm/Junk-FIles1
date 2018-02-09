@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from datetime import datetime
+import pyautogui
 import os
 from collections import OrderedDict
 import urllib.request
@@ -127,6 +128,12 @@ try:
         listOfSubUrl = []
         listOfSubLinks = []
         linksOnPage = browser.find_elements_by_partial_link_text('')
+
+        for oneLink in linksOnPage:
+            oneLink = (str(oneLink.get_attribute('href')))
+            if "view" and "section" in oneLink:
+                listOfSubLinks.append(oneLink)
+
         # Remove redundant links if present
         d = OrderedDict()
         for x in listOfSubLinks:
@@ -153,7 +160,7 @@ try:
             print(SubTitle)
             SubTitle = "E:\Coding\\test\\" + level1 + "\\" + SubTitle
             try:
-                makedirs(SubTitle)
+                os.makedirs(SubTitle)
             except:
                 pass
             links = browser.find_elements_by_partial_link_text('')
@@ -180,8 +187,6 @@ try:
                 listOfLinks.append(x)
             # print(listOfLinks)
             totalLinks = len(listOfLinks)
-            download(durl, fnameWithDir)
-
             i = 0
 
             # For each link, get the video link
@@ -201,9 +206,47 @@ try:
                 print('Topics in this Subject ', subjectNumber, '/', totalSubs, sep='')
 
                 print('Videos in this topic ', i, '/', totalLinks, sep='')
+                (originalx, originaly) = pyautogui.position()
+                if minimumWindow:
+                    pyautogui.moveTo(150, 600, 2)  # 777,530,0.1 for full screen    150,600,1 when least size
+                else:
+                    pyautogui.moveTo(775, 530, 0.1)
                 title = browser.title
                 result = None
                 counterForLink = 0
+                while result is None:
+                    try:
+                        (x, y) = pyautogui.position()
+                        x = x + 52
+                        y = y - 62
+                        pyautogui.rightClick()
+                        # (x, y) = pyautogui.locateCenterOnScreen("view frame source.bmp")
+                        pyautogui.moveTo(x, y, 0.1)
+                        pyautogui.click()
+                        window_after = browser.window_handles[1]
+                        result = 'done and got the link'
+                    except:
+                        counterForLink += 1
+                        if counterForLink > 20:
+                            raise Exception
+
+                        time.sleep(5)
+                pyautogui.moveTo(originalx, originaly, 0.01)
+                browser.switch_to.window(window_after)
+                tag = (browser.find_elements_by_css_selector('body'))[0].text
+                tag = str(tag)
+                index = -1
+                index = tag.find('cdn":"akamai_interconnect","quality":"360p"')
+                if index == -1:
+                    index = tag.find(',"fps":25,"url":"https://gcs-vimeo.akamaized.net/')
+                    mainlink = tag[index + 22:index + 300]
+                    mainlink = "https" + mainlink.split('"')[0]
+                mainlink = tag[index - 220:index]
+                httpindex = mainlink.find('https')
+                mp4index = mainlink.rfind('mp4')
+                mainlink = mainlink[httpindex:mp4index + 3]
+                title = str(i) + title.split(':')[1]
+                print(title)
                 browser.close()
                 browser.switch_to.window(mainWindow)
                 listOfURL.append(mainlink)
@@ -212,7 +255,7 @@ try:
                 # f.write(mainlink + '\n')
                 durl = mainlink
                 # print(durl)
-                fname = title + '_720p.mp4'
+                fname = title + '.mp4'
                 for tag in tags:
                     fname = fname.replace(tag, " ")
                 fnameWithDir = SubTitle + "\\" + fname
