@@ -211,6 +211,8 @@ try:
                     pyautogui.moveTo(150, 600, 2)  # 777,530,0.1 for full screen    150,600,1 when least size
                 else:
                     pyautogui.moveTo(775, 530, 0.1)
+                    pyautogui.click()
+                    pyautogui.moveTo(775, 530, 1)
                 title = browser.title
                 result = None
                 counterForLink = 0
