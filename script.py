@@ -1,5 +1,5 @@
-uname='Enter your yourname here'
-pword='Enter your password here'
+uname='username'
+pword='password'
 
 
 from selenium import webdriver
